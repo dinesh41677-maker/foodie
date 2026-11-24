@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">{% endblock %}
+
+{% block content %}
+<section class="menu-hero">
+  <div class="container">
+    <h1>Hungry? Order from Foodie</h1>
+    <div class="search-box">
+      <input id="search" type="search" placeholder="Search for biryani, dosa, paneer..." autocomplete="off" aria-label="Search food">
+    </div>
+  </div>
+</section>
+
+<section class="container menu-wrap" id="menu-app" data-start-type="{{ start_type }}">
+  <div class="type-tabs" role="tablist" aria-label="Food type">
+    <button class="type-tab" role="tab" data-type="veg"><span class="diet veg"></span> VEG</button>
+    <button class="type-tab" role="tab" data-type="nonveg"><span class="diet nonveg"></span> NON-VEG</button>
+  </div>
+
+  <div class="filters" aria-label="Filters">
+    <button class="chip" data-filter="bestseller">Bestseller</button>
+    <button class="chip" data-filter="rating">Rating 4.0+</button>
+    <select id="price-filter" aria-label="Price filter">
+      <option value="">Any price</option>
+      <option value="100">Under ₹100</option>
+      <option value="150">Under ₹150</option>
+      <option value="200">Under ₹200</option>
+      <option value="250">Under ₹250</option>
+    </select>
+    <select id="category-filter" aria-label="Category filter">
+      <option value="">All categories</option>
+      {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+    </select>
+    <select id="sort-filter" aria-label="Sort">
+      <option value="">Recommended</option>
+      <option value="rating">Rating: high to low</option>
+      <option value="price_low">Price: low to high</option>
+      <option value="price_high">Price: high to low</option>
+    </select>
+  </div>
+
+  <p id="result-count" class="muted" aria-live="polite"></p>
+  <div id="food-grid" class="food-grid"></div>
+  <div id="empty-state" class="empty" hidden>
+    <h3>No dishes match these filters</h3>
+    <p>Clear the search or remove a filter to see more food.</p>
+    <button class="btn" id="clear-filters" type="button">Clear filters</button>
+  </div>
+</section>
+
+{% include 'components/addon_modal.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/addons.js') }}"></script>
+<script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,8 @@
+<!-- Floating "View Cart" bar. cart.js fills it and shows it when the cart has items. -->
+<div id="cart-bar" class="cart-bar" hidden>
+  <div class="cart-bar-info">
+    <strong><span id="cart-bar-count">0</span> item<span id="cart-bar-plural">s</span></strong>
+    <span class="cart-bar-total" id="cart-bar-total">₹0</span>
+  </div>
+  <a class="cart-bar-btn" href="{{ url_for('cart.cart_page') }}">View Cart</a>
+</div>

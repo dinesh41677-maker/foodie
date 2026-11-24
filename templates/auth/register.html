@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Sign up{% endblock %}
+{% block cart_bar %}{% endblock %}
+{% block content %}
+<div class="container auth-wrap">
+  <form method="post" class="panel auth-card" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h1>Create your account</h1>
+    <label class="field">Full name <input name="name" value="{{ form.name or '' }}" required maxlength="80" autocomplete="name"></label>
+    <label class="field">Email <input type="email" name="email" value="{{ form.email or '' }}" required autocomplete="email"></label>
+    <label class="field">Mobile number <input name="phone" value="{{ form.phone or '' }}" inputmode="numeric" maxlength="10" required autocomplete="tel"></label>
+    <label class="field">Password <input type="password" name="password" required autocomplete="new-password">
+      <small class="muted">At least 8 characters with a letter and a number.</small></label>
+    <label class="field">Confirm password <input type="password" name="confirm" required autocomplete="new-password"></label>
+    <button class="btn btn-block" type="submit">Sign up</button>
+    <p class="muted center">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+  </form>
+</div>
+{% endblock %}

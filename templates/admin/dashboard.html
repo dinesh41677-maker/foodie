@@ -1,0 +1,31 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block admin_content %}
+<h1>Dashboard</h1>
+<div class="stat-grid">
+  <div class="stat"><b>{{ stats.total_orders }}</b><span>Total orders</span></div>
+  <div class="stat"><b>{{ stats.active_orders }}</b><span>Active orders</span></div>
+  <div class="stat"><b>{{ stats.today_orders }}</b><span>Orders today</span></div>
+  <div class="stat"><b>{{ stats.revenue|inr }}</b><span>Revenue (not cancelled)</span></div>
+  <div class="stat"><b>{{ foods }}</b><span>Food items</span></div>
+  <div class="stat"><b>{{ users }}</b><span>Users</span></div>
+</div>
+
+<div class="admin-head"><h2>Recent orders</h2><a href="{{ url_for('admin.orders') }}">See all orders</a></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Placed</th></tr></thead>
+    <tbody>
+    {% for o in recent %}
+      <tr>
+        <td>#{{ o.id }}</td><td>{{ o.customer_name }}</td><td>{{ o.grand_total|inr }}</td>
+        <td><span class="status status-{{ o.status }}">{{ o.status_label }}</span></td>
+        <td>{{ o.created_at.strftime('%d %b, %I:%M %p') }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="muted">No orders yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

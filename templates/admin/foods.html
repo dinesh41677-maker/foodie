@@ -1,0 +1,37 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Manage foods{% endblock %}
+{% block admin_content %}
+<div class="admin-head">
+  <h1>Foods</h1>
+  <a class="btn" href="{{ url_for('admin.food_new') }}">Add food item</a>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Image</th><th>Name</th><th>Type</th><th>Category</th><th>Price</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for f in foods %}
+      <tr>
+        <td><img class="thumb" src="{{ image_url(f.image) }}" alt="" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/placeholder.svg') }}'"></td>
+        <td><strong>{{ f.name }}</strong>{% if f.is_bestseller %}<br><span class="tag on">Bestseller</span>{% endif %}</td>
+        <td><span class="diet {{ f.food_type }}"></span> {{ 'VEG' if f.food_type == 'veg' else 'NON-VEG' }}</td>
+        <td>{{ f.category_name }}</td>
+        <td>{{ f.discounted_price|inr }} <span class="was">{{ f.original_price|inr }}</span></td>
+        <td>{{ f.rating }}</td>
+        <td>{% if f.is_available %}<span class="tag on">Available</span>{% else %}<span class="tag off">Hidden</span>{% endif %}</td>
+        <td>
+          <div class="row-actions">
+            <a class="btn btn-small btn-ghost" href="{{ url_for('admin.food_edit', food_id=f.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('admin.food_delete', food_id=f.id) }}" data-confirm="Delete {{ f.name }}? This cannot be undone.">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="btn btn-small btn-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="8" class="muted">No food items yet. Add your first one.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

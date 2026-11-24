@@ -1,0 +1,33 @@
+<!-- Add-on popup. addons.js opens it when the user presses ADD. -->
+<div id="addon-modal" class="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="am-title">
+    <div class="modal-head">
+      <img id="am-img" alt="" class="modal-img">
+      <div>
+        <span id="am-diet" class="diet"></span>
+        <h2 id="am-title"></h2>
+        <div class="price-row"><span class="now" id="am-now"></span><span class="was" id="am-was"></span></div>
+      </div>
+      <button class="icon-btn" type="button" data-close aria-label="Close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="addon-top">
+        <h3>Make it a meal</h3>
+        <label class="check"><input type="checkbox" id="am-all"> Select all</label>
+      </div>
+      <ul id="am-list" class="addon-list"></ul>
+    </div>
+
+    <div class="modal-foot">
+      <div class="qty" aria-label="Quantity">
+        <button type="button" id="am-minus" aria-label="Decrease quantity">−</button>
+        <span id="am-qty">1</span>
+        <button type="button" id="am-plus" aria-label="Increase quantity">+</button>
+      </div>
+      <button type="button" class="btn btn-ghost" id="am-skip">Skip add-ons</button>
+      <button type="button" class="btn btn-grow" id="am-add">Add to cart <span id="am-total"></span></button>
+    </div>
+  </div>
+</div>

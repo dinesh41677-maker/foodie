@@ -1,0 +1,8 @@
+<dl class="bill">
+  <div><dt>Item total</dt><dd>{{ bill.mrp_total|inr }}</dd></div>
+  {% if bill.discount > 0 %}<div class="green"><dt>Discount</dt><dd>− {{ bill.discount|inr }}</dd></div>{% endif %}
+  {% if bill.addon_total > 0 %}<div><dt>Add-ons</dt><dd>{{ bill.addon_total|inr }}</dd></div>{% endif %}
+  <div><dt>Delivery fee</dt><dd>{% if bill.delivery_fee == 0 %}<span class="green">FREE</span>{% else %}{{ bill.delivery_fee|inr }}{% endif %}</dd></div>
+  <div><dt>Taxes ({{ bill.tax_percent }}% GST)</dt><dd>{{ bill.tax|inr }}</dd></div>
+  <div class="grand"><dt>Grand total</dt><dd>{{ bill.grand_total|inr }}</dd></div>
+</dl>

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">{% endblock %}
+
+{% block content %}
+<div class="container narrow">
+  <h1>Order #{{ order.id }}</h1>
+  <p class="muted">Placed on {{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+
+  <div class="panel" id="tracker" data-order-id="{{ order.id }}" data-status="{{ order.status }}">
+    <div id="cancelled-note" class="flash flash-error" {% if order.status != 'cancelled' %}hidden{% endif %}>
+      This order was cancelled.
+    </div>
+    <ol class="steps">
+      {% set reached = order.history|map(attribute='status')|list %}
+      {% for s in flow %}
+      <li class="step {{ 'done' if s in reached }} {{ 'current' if s == order.status }}" data-step="{{ s }}">
+        <span class="dot"></span>
+        <span class="step-label">{{ labels[s] }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+    <p class="muted small" id="live-note">This page updates by itself.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Items</h2>
+    {% for i in order['items'] %}
+    <div class="sum-line">
+      <span class="diet {{ i.food_type }}"></span>
+      <div class="sum-name">{{ i.quantity }} × {{ i.food_name }}
+        {% if i.addons %}<div class="muted small">+ {{ i.addons|map(attribute='addon_name')|join(', ') }}</div>{% endif %}
+      </div>
+      <span>{{ i.line_total|inr }}</span>
+    </div>
+    {% endfor %}
+    <dl class="bill">
+      <div><dt>Item total</dt><dd>{{ order.mrp_total|inr }}</dd></div>
+      {% if order.discount_total > 0 %}<div class="green"><dt>Discount</dt><dd>− {{ order.discount_total|inr }}</dd></div>{% endif %}
+      {% if order.addon_total > 0 %}<div><dt>Add-ons</dt><dd>{{ order.addon_total|inr }}</dd></div>{% endif %}
+      <div><dt>Delivery fee</dt><dd>{{ order.delivery_fee|inr if order.delivery_fee > 0 else 'FREE' }}</dd></div>
+      <div><dt>Taxes</dt><dd>{{ order.tax_amount|inr }}</dd></div>
+      <div class="grand"><dt>Grand total</dt><dd>{{ order.grand_total|inr }}</dd></div>
+    </dl>
+  </div>
+
+  <div class="panel">
+    <h2>Delivery</h2>
+    <p>{{ order.customer_name }} · {{ order.phone }}</p>
+    <p class="muted">{{ order.delivery_address }}</p>
+    <p class="muted">Payment: {{ order.payment_method|upper }} ({{ order.payment_status }})</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/tracking.js') }}"></script>{% endblock %}

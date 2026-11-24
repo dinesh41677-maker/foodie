@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block cart_bar %}{% endblock %}
+{% block content %}
+<div class="container auth-wrap">
+  <form method="post" class="panel auth-card">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+    <h1>Log in</h1>
+    <label class="field">Email <input type="email" name="email" required autocomplete="email" autofocus></label>
+    <label class="field">Password <input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn btn-block" type="submit">Log in</button>
+    <p class="muted center">New to Foodie? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </form>
+</div>
+{% endblock %}

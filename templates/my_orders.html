@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}My orders{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">{% endblock %}
+
+{% block content %}
+<div class="container narrow">
+  <h1>My orders</h1>
+  {% for o in orders %}
+  <a class="panel order-card" href="{{ url_for('orders.track', order_id=o.id) }}">
+    <div>
+      <strong>Order #{{ o.id }}</strong>
+      <div class="muted small">{{ o.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+      <div class="small">{{ o['items']|map(attribute='food_name')|join(', ') }}</div>
+    </div>
+    <div class="right">
+      <strong>{{ o.grand_total|inr }}</strong>
+      <span class="status status-{{ o.status }}">{{ o.status_label }}</span>
+    </div>
+  </a>
+  {% else %}
+  <div class="empty">
+    <h3>No orders yet</h3>
+    <p>Your orders will show up here once you place one.</p>
+    <a class="btn" href="{{ url_for('main.menu') }}">Browse the menu</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

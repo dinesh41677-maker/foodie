@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<div class="container narrow">
+  <h1>My profile</h1>
+
+  <form method="post" class="panel" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h2>Details</h2>
+    <label class="field">Email <input value="{{ current_user.email }}" disabled></label>
+    <div class="field-row">
+      <label class="field">Name <input name="name" value="{{ current_user.name }}" maxlength="80" required></label>
+      <label class="field">Mobile <input name="phone" value="{{ current_user.phone }}" maxlength="10" inputmode="numeric" required></label>
+    </div>
+    <button class="btn" type="submit">Save changes</button>
+  </form>
+
+  <div class="panel">
+    <h2>Saved addresses</h2>
+    {% for a in addresses %}
+    <div class="address-row">
+      <div><strong>{{ a.label }}</strong><br>{{ a.address_line }}, {{ a.city }} - {{ a.pincode }}</div>
+      <form method="post" action="{{ url_for('auth.delete_address', address_id=a.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="btn btn-ghost btn-small" type="submit">Remove</button>
+      </form>
+    </div>
+    {% else %}
+    <p class="muted">No saved addresses yet.</p>
+    {% endfor %}
+    <form method="post" action="{{ url_for('auth.add_address') }}" class="new-address" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <h3>Add an address</h3>
+      <div class="field-row">
+        <label class="field">Label <input name="label" value="Home" maxlength="30"></label>
+        <label class="field">Pincode <input name="pincode" inputmode="numeric" maxlength="6" required></label>
+      </div>
+      <label class="field">Address <input name="address_line" maxlength="255" required></label>
+      <label class="field">City <input name="city" maxlength="60" required></label>
+      <button class="btn" type="submit">Save address</button>
+    </form>
+  </div>
+
+  <form method="post" action="{{ url_for('auth.change_password') }}" class="panel" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h2>Change password</h2>
+    <label class="field">Current password <input type="password" name="current" required autocomplete="current-password"></label>
+    <div class="field-row">
+      <label class="field">New password <input type="password" name="new" required autocomplete="new-password"></label>
+      <label class="field">Confirm new password <input type="password" name="confirm" required autocomplete="new-password"></label>
+    </div>
+    <button class="btn" type="submit">Change password</button>
+  </form>
+</div>
+{% endblock %}

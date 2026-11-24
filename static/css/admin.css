@@ -1,0 +1,37 @@
+/* Admin dashboard */
+.admin-shell { max-width: 1250px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: 210px 1fr; gap: 20px; align-items: start; }
+.admin-side { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; position: sticky; top: 76px; }
+.admin-side a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--ink); font-weight: 600; }
+.admin-side a:hover { background: var(--orange-soft); text-decoration: none; }
+.admin-side a.active { background: var(--orange); color: #fff; }
+.admin-main { min-width: 0; }
+.admin-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 14px 0; }
+.stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.stat b { display: block; font-size: 1.7rem; font-weight: 800; }
+.stat span { color: var(--grey); font-weight: 600; font-size: .9rem; }
+
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: .92rem; }
+th { background: #fafafa; font-weight: 700; color: var(--grey); }
+tr:last-child td { border-bottom: 0; }
+.thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; background: var(--orange-soft); }
+.row-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.inline-input { margin: 0; padding: 8px 10px; }
+.tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .75rem; font-weight: 700; background: var(--page); color: var(--grey); }
+.tag.on { background: #e6f7ef; color: #0d6e4a; }
+.tag.off { background: #fdebed; color: #a3182b; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.add-row { display: grid; grid-template-columns: 1fr 140px auto auto; gap: 10px; align-items: end; }
+.order-items { margin: 0; padding-left: 16px; color: var(--grey); font-size: .85rem; }
+.filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 12px; background: var(--orange-soft); margin-top: 8px; }
+
+@media (max-width: 860px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-side { position: static; display: flex; gap: 4px; overflow-x: auto; }
+  .admin-side a { white-space: nowrap; }
+  .add-row { grid-template-columns: 1fr; }
+}

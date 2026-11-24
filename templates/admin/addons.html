@@ -1,0 +1,38 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Add-ons{% endblock %}
+{% block admin_content %}
+<h1>Add-ons</h1>
+<p class="muted">Create add-ons here, then tick them on each food's edit page.</p>
+
+<form method="post" action="{{ url_for('admin.addon_add') }}" class="panel add-row">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label class="field" style="margin:0">Name <input name="name" maxlength="80" required></label>
+  <label class="field" style="margin:0">Price (₹) <input name="price" inputmode="decimal" required></label>
+  <label class="check"><input type="checkbox" name="is_available" value="1" checked> Available</label>
+  <button class="btn" type="submit">Add add-on</button>
+</form>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Price (₹)</th><th>Available</th><th>Used by</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for a in addons %}
+      <tr>
+        <td><input class="inline-input" form="e{{ a.id }}" name="name" value="{{ a.name }}" maxlength="80" required></td>
+        <td><input class="inline-input" form="e{{ a.id }}" name="price" value="{{ a.price }}" inputmode="decimal" required style="width:100px"></td>
+        <td><input form="e{{ a.id }}" type="checkbox" name="is_available" value="1" {{ 'checked' if a.is_available }}></td>
+        <td>{{ a.food_count }} food{{ '' if a.food_count == 1 else 's' }}</td>
+        <td>
+          <div class="row-actions">
+            <button class="btn btn-small" form="e{{ a.id }}" type="submit">Save</button>
+            <button class="btn btn-small btn-danger" form="d{{ a.id }}" type="submit">Delete</button>
+          </div>
+          <form id="e{{ a.id }}" method="post" action="{{ url_for('admin.addon_edit', addon_id=a.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"></form>
+          <form id="d{{ a.id }}" method="post" action="{{ url_for('admin.addon_delete', addon_id=a.id) }}" data-confirm="Delete add-on {{ a.name }}?"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"></form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

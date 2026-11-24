@@ -1,0 +1,46 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Orders{% endblock %}
+{% block admin_content %}
+<h1>Orders</h1>
+<div class="filter-tabs">
+  <a class="btn btn-small {{ '' if not current else 'btn-ghost' }}" href="{{ url_for('admin.orders') }}">All</a>
+  {% for s in statuses %}
+  <a class="btn btn-small {{ '' if current == s else 'btn-ghost' }}" href="{{ url_for('admin.orders', status=s) }}">{{ labels[s] }}</a>
+  {% endfor %}
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Update status</th></tr></thead>
+    <tbody>
+    {% for o in orders %}
+      <tr>
+        <td><strong>#{{ o.id }}</strong><br><span class="muted small">{{ o.created_at.strftime('%d %b, %I:%M %p') }}</span></td>
+        <td>{{ o.customer_name }}<br><span class="muted small">{{ o.phone }}</span><br><span class="muted small">{{ o.delivery_address }}</span></td>
+        <td>
+          <ul class="order-items">
+          {% for i in o['items'] %}
+            <li>{{ i.quantity }} × {{ i.food_name }}{% if i.addons %} (+ {{ i.addons|map(attribute='addon_name')|join(', ') }}){% endif %}</li>
+          {% endfor %}
+          </ul>
+        </td>
+        <td>{{ o.grand_total|inr }}<br><span class="muted small">{{ o.payment_method|upper }} · {{ o.payment_status }}</span></td>
+        <td><span class="status status-{{ o.status }}">{{ o.status_label }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('admin.order_status', order_id=o.id) }}" class="row-actions">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="return_status" value="{{ current or '' }}">
+            <select name="status" class="inline-input" style="width:auto" aria-label="Status for order {{ o.id }}">
+              {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if s == o.status }}>{{ labels[s] }}</option>{% endfor %}
+            </select>
+            <button class="btn btn-small" type="submit">Update</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="muted">No orders found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

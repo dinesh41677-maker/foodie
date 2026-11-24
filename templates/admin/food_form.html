@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ 'Edit' if food else 'Add' }} food item{% endblock %}
+{% block admin_content %}
+{# When the form fails, we show what the admin typed; otherwise the saved food. #}
+{% set v = form if form else (food if food else {}) %}
+{% set avail = ('is_available' in v) if form else (food.is_available if food else true) %}
+<h1>{{ 'Edit ' ~ food.name if food else 'Add food item' }}</h1>
+
+<form method="post" enctype="multipart/form-data" class="panel" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+  <div class="field-row">
+    <label class="field">Name <input name="name" value="{{ v.name or '' }}" maxlength="100" required></label>
+    <label class="field">Category
+      <select name="category_id" required>
+        <option value="">Choose...</option>
+        {% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if v.category_id|string == c.id|string }}>{{ c.name }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <label class="field">Description <input name="description" value="{{ v.description or '' }}" maxlength="255"></label>
+
+  <fieldset class="field" style="border:0;padding:0">
+    <legend style="font-weight:600;font-size:.9rem">Type</legend>
+    <label class="check"><input type="radio" name="food_type" value="veg" {{ 'checked' if v.food_type == 'veg' }}> <span class="diet veg"></span> VEG</label>
+    &nbsp;&nbsp;
+    <label class="check"><input type="radio" name="food_type" value="nonveg" {{ 'checked' if v.food_type == 'nonveg' }}> <span class="diet nonveg"></span> NON-VEG</label>
+  </fieldset>
+
+  <div class="field-row">
+    <label class="field">Original price (₹) <input name="original_price" value="{{ v.original_price or '' }}" inputmode="decimal" required></label>
+    <label class="field">Discounted price (₹) <input name="discounted_price" value="{{ v.discounted_price or '' }}" inputmode="decimal" required></label>
+  </div>
+  <div class="field-row">
+    <label class="field">Rating (0 to 5) <input name="rating" value="{{ v.rating if v.rating is defined else '4.0' }}" inputmode="decimal"></label>
+    <label class="field">Food photo (JPG, PNG or WEBP, max 2 MB)
+      <input type="file" name="image" accept="image/png,image/jpeg,image/webp" id="image-input">
+    </label>
+  </div>
+  <img id="image-preview" class="preview-img" alt="Photo preview" src="{{ image_url(food.image) if food else '' }}" {% if not food or not food.image %}hidden{% endif %}>
+
+  <p>
+    <label class="check"><input type="checkbox" name="is_bestseller" value="1" {{ 'checked' if v.is_bestseller }}> Bestseller</label>
+    &nbsp;&nbsp;
+    <label class="check"><input type="checkbox" name="is_available" value="1" {{ 'checked' if avail }}> Available on the menu</label>
+  </p>
+
+  <h2>Add-ons for this food</h2>
+  {% if addons %}
+  <div class="checks">
+    {% for a in addons %}
+    <label class="check"><input type="checkbox" name="addon_ids" value="{{ a.id }}" {{ 'checked' if a.id in selected_addons }}> {{ a.name }} ({{ a.price|inr }})</label>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">No add-ons yet. Create some on the Add-ons page first.</p>
+  {% endif %}
+
+  <div class="btn-row" style="justify-content:flex-start">
+    <button class="btn" type="submit">{{ 'Save changes' if food else 'Add food item' }}</button>
+    <a class="btn btn-ghost" href="{{ url_for('admin.foods') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

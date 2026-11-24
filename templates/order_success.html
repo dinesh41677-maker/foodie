@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Order placed{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">{% endblock %}
+
+{% block content %}
+<div class="container narrow center">
+  <div class="success-mark" aria-hidden="true">✓</div>
+  <h1>Order placed</h1>
+  <p>Order <strong>#{{ order.id }}</strong> · {{ order.grand_total|inr }} · {{ order.payment_method|upper }}</p>
+  <p class="muted">Delivering to {{ order.delivery_address }}</p>
+  <div class="btn-row">
+    <a class="btn" href="{{ url_for('orders.track', order_id=order.id) }}">Track my order</a>
+    <a class="btn btn-ghost" href="{{ url_for('main.menu') }}">Back to menu</a>
+  </div>
+</div>
+{% endblock %}

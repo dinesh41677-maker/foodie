@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Your cart{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">{% endblock %}
+{% block cart_bar %}{% endblock %}
+
+{% block content %}
+<div class="container narrow" id="cart-page">
+  <h1>Your cart</h1>
+  <div id="cart-content"><p class="muted">Loading your cart...</p></div>
+</div>
+{% endblock %}

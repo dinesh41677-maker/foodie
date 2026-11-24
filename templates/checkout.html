@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">{% endblock %}
+{% block cart_bar %}{% endblock %}
+
+{% block content %}
+<div class="container checkout-grid">
+  <form method="post" id="checkout-form" class="panel" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h1>Checkout</h1>
+
+    <h2>Customer details</h2>
+    <div class="field-row">
+      <label class="field">Full name
+        <input name="customer_name" value="{{ form.customer_name }}" maxlength="80" required>
+      </label>
+      <label class="field">Contact number
+        <input name="phone" value="{{ form.phone }}" inputmode="numeric" maxlength="10" placeholder="10 digit mobile" required>
+      </label>
+    </div>
+
+    <h2>Delivery address</h2>
+    {% for a in addresses %}
+    <label class="option">
+      <input type="radio" name="address_id" value="{{ a.id }}" {{ 'checked' if form.address_id == a.id|string }}>
+      <span><strong>{{ a.label }}</strong><br>{{ a.address_line }}, {{ a.city }} - {{ a.pincode }}</span>
+    </label>
+    {% endfor %}
+    <label class="option">
+      <input type="radio" name="address_id" value="new" {{ 'checked' if form.address_id == 'new' }}>
+      <span><strong>Use a new address</strong></span>
+    </label>
+    <div id="new-address" class="new-address">
+      <label class="field">Address (house no, street, area)
+        <input name="address_line" value="{{ form.address_line or '' }}" maxlength="255">
+      </label>
+      <div class="field-row">
+        <label class="field">City <input name="city" value="{{ form.city or '' }}" maxlength="60"></label>
+        <label class="field">Pincode <input name="pincode" value="{{ form.pincode or '' }}" inputmode="numeric" maxlength="6"></label>
+      </div>
+      <label class="check"><input type="checkbox" name="save_address" value="1" {{ 'checked' if form.save_address }}> Save this address to my profile</label>
+    </div>
+
+    <h2>Payment method</h2>
+    {% for key, label in payment_methods.items() %}
+    <label class="option">
+      <input type="radio" name="payment_method" value="{{ key }}" {{ 'checked' if form.payment_method == key }}>
+      <span>{{ label }}</span>
+    </label>
+    {% endfor %}
+    <p class="muted small">You pay when the order arrives. Online payment is not connected yet.</p>
+
+    <button class="btn btn-block" type="submit">Place order · {{ bill.grand_total|inr }}</button>
+  </form>
+
+  <aside class="panel summary">
+    <h2>Order summary</h2>
+    {% for l in lines %}
+    <div class="sum-line">
+      <span class="diet {{ l.food_type }}"></span>
+      <div class="sum-name">{{ l.qty }} × {{ l.name }}
+        {% if l.addons %}<div class="muted small">+ {{ l.addons|map(attribute='name')|join(', ') }}</div>{% endif %}
+      </div>
+      <span>{{ l.line_total|inr }}</span>
+    </div>
+    {% endfor %}
+    {% include 'components/bill.html' %}
+    <a href="{{ url_for('cart.cart_page') }}" class="link">Edit cart</a>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/checkout.js') }}"></script>{% endblock %}

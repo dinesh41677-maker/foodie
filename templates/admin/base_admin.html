@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block cart_bar %}{% endblock %}
+
+{% block content %}
+{% set ep = request.endpoint or '' %}
+<div class="admin-shell">
+  <nav class="admin-side" aria-label="Admin">
+    <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if ep == 'admin.dashboard' }}">Dashboard</a>
+    <a href="{{ url_for('admin.orders') }}" class="{{ 'active' if ep == 'admin.orders' }}">Orders</a>
+    <a href="{{ url_for('admin.foods') }}" class="{{ 'active' if ep.startswith('admin.food') }}">Foods</a>
+    <a href="{{ url_for('admin.categories') }}" class="{{ 'active' if ep.startswith('admin.categor') }}">Categories</a>
+    <a href="{{ url_for('admin.addons') }}" class="{{ 'active' if ep.startswith('admin.addon') }}">Add-ons</a>
+    <a href="{{ url_for('admin.users') }}" class="{{ 'active' if ep.startswith('admin.user') }}">Users</a>
+  </nav>
+  <section class="admin-main">{% block admin_content %}{% endblock %}</section>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>{% endblock %}
